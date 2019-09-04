@@ -124,7 +124,11 @@
 
 	function objectiveTest($base, $objective)
 	{
-		return (count(array_diff($base, $objective)) > 0) ? false :  true;
+		foreach ($base as $i => $value)
+			if($base[$i] != $objective[$i])
+				return false;
+			
+		return true;
 	}
 
 	$node = nextCondition($base);
@@ -133,7 +137,12 @@
 		if(objectiveTest($value, $objective))
 		{
 			print "Finish!";
+			break;
 		}
 	}
+
+	print '<pre>';
+	print_r($node);
+	print_r($objective);
 
 ?>
