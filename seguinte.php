@@ -1,70 +1,73 @@
 <?php 
-	
-	$base = [1, 2, 3, '', 5, 6, 7, 8, 4];
+	error_reporting(0);
 
-	$objective = [1, 2, 3, 5, '', 6, 7, 8, 4];
+	$list = array();
 
-	function up($base, $element, $coordinates)
+	$root = [1, 5, 2, 7, 4, 3, 8, 6, ''];
+
+	$objective = [1, 2, 3, 4, 5, 6, 7, 8, ''];
+
+	function up($root, $element, $coordinates)
 	{
 		
 		if(substr($coordinates,1,1) != '1')
 		{
-			$base[$element] = $base[$element + 3];
-			$base[$element + 3] = '';
+			$root[$element] = $root[$element + 3];
+			$root[$element + 3] = '';
 
-			return $base;
+			return $root;
 		}
 
 		return false;
 	}
 
-	function down($base, $element, $coordinates)
+	function down($root, $element, $coordinates)
 	{
 		if(substr($coordinates,1,1) != '3')
 		{
-			$base[$element] = $base[$element - 3];
-			$base[$element - 3] = '';
+			$root[$element] = $root[$element - 3];
+			$root[$element - 3] = '';
 
-			return $base;
+			return $root;
 		}
 
 		return false;
 	}
 
-	function left($base, $element, $coordinates)
+	function left($root, $element, $coordinates)
 	{
 		if(substr($coordinates,3,-1) != '1')
 		{
-			$base[$element] = $base[$element - 1];
-			$base[$element - 1] = '';
+			$root[$element] = $root[$element - 1];
+			$root[$element - 1] = '';
 
-			return $base;
+			return $root;
 		}
 
 		return false;
 	}
 
-	function right($base, $element, $coordinates)
+	function right($root, $element, $coordinates)
 	{
 		if(substr($coordinates,3,-1) != '3')
 		{
-			$base[$element] = $base[$element + 1];
-			$base[$element + 1] = '';
+			$root[$element] = $root[$element + 1];
+			$root[$element + 1] = '';
 
-			return $base;
+			return $root;
 		}
 
 		return false;
 	}
 
-	function returnPositionFree($base)
+	function returnPositionFree($root)
 	{
-		foreach ($base as $key => $value)
+		foreach ($root as $key => $value)
 			if(empty($value))
 				return $key;
 	}
 
-	function returnCoordinates($index, $base)
+	function returnCoordinates($index, $root)
 	{
 		if($index < 3)
 			if($index < 2)
@@ -93,56 +96,60 @@
 					return '[3,3]';
 	}
 
-	function nextCondition($base)
+	function nextCondition($root, $list)
 	{
 		#Descobrindo qual linha a posição livre está
-		$element = returnPositionFree($base);
+		$element = returnPositionFree($root);
 
-		$position = returnCoordinates($element, $base);
+		$position = returnCoordinates($element, $root);
 
-		$node = array();
-
-		$down = down($base, $element, $position);
-		$up = up($base, $element, $position);
-		$left = left($base, $element, $position);
-		$right = right($base, $element, $position);
+		$down = down($root, $element, $position);
+		$up = up($root, $element, $position);
+		$left = left($root, $element, $position);
+		$right = right($root, $element, $position);
 
 		if($down !== false)
-			$node[] = $down;
+			array_push($list, $down);
 
 		if($up !== false)
-			$node[] = $up;
+			array_push($list, $up);
 
 		if($right !== false)
-			$node[] = $right;
+			array_push($list, $right);
 
 		if($left !== false)
-			$node[] = $left;
-		
-		return $node;
+			array_push($list, $left);
+
+		return $list;
 	}
 
-	function objectiveTest($base, $objective)
+	function objectiveTest($root, $objective)
 	{
-		foreach ($base as $i => $value)
-			if($base[$i] != $objective[$i])
+		foreach ($root as $i => $value)
+			if($root[$i] != $objective[$i])
 				return false;
 			
 		return true;
 	}
 
-	$node = nextCondition($base);
+	function searchWidth($root,$list, $objective)
+	{
+		array_push($list, $root);
+		while (count($list) > 0) {
+			$node = $list[0];
+			
+			#Gambiarra
+			unset($list[0]);
+			$list = array_values($list); 
 
-	foreach ($node as $key => $value) {
-		if(objectiveTest($value, $objective))
-		{
-			print "Finish!";
-			break;
-		}
+			if(objectiveTest($node, $objective))
+				return $node;
+			else	
+				$list = nextCondition($node, $list);
+		}		
 	}
 
 	print '<pre>';
-	print_r($node);
-	print_r($objective);
-
+	print_r(searchWidth($root, $list, $objective));
+	exit;
 ?>
