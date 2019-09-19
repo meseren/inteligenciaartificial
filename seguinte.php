@@ -1,4 +1,5 @@
 <?php 
+	error_reporting(0);
 
 	$list = array();
 
@@ -8,7 +9,7 @@
 
 	function up($root, $element, $coordinates)
 	{
-
+		
 		if(substr($coordinates,1,1) != '1')
 		{
 			$root[$element] = $root[$element + 3];
@@ -35,7 +36,7 @@
 
 	function left($root, $element, $coordinates)
 	{
-		if(substr($coordinates,3,-1) != '3')
+		if(substr($coordinates,3,-1) != '1')
 		{
 			$root[$element] = $root[$element - 1];
 			$root[$element - 1] = '';
@@ -48,7 +49,7 @@
 
 	function right($root, $element, $coordinates)
 	{
-		if(substr($coordinates,3,-1) != '1')
+		if(substr($coordinates,3,-1) != '3')
 		{
 			$root[$element] = $root[$element + 1];
 			$root[$element + 1] = '';
@@ -139,16 +140,16 @@
 		foreach ($root as $i => $value)
 			if($root[$i] != $objective[$i])
 				return false;
-
+			
 		return true;
 	}
 
-	function searchWidth($root, $list, $objective)
+	function widthSearch($root, $list, $objective)
 	{
 		array_push($list, $root);
 		while (count($list) > 0) {
 			$node = $list[0];
-
+			
 			array_shift($list); 
 
 			if(objectiveTest($node, $objective))
@@ -157,15 +158,15 @@
 				$list = nextCondition($node, $list);
 		}		
 	}
-
-	function searchDepth($root, $list, $objective)
+	
+	function depthSearch($root, $list, $objective)
 	{
-
+		
 		array_push($list, $root);
-
+		
 		while (count($list) > 0) {
 			$node = $list[0];
-
+			
 			array_pop($list); 
 
 			if(objectiveTest($node, $objective))
@@ -174,14 +175,14 @@
 				$list = nextCondition($node, $list);
 		}	
 	}
-
-	function searchDepthLimit($root, $list, $objective, $limit)
+	
+	function depthLimitSearch($root, $list, $objective, $limit)
 	{
 		array_push($list, $root);
-
+		
 		while (count($list) > 0) {
 			$node = $list[0];
-
+			
 			array_pop($list); 
 
 			if(objectiveTest($node, $objective))
@@ -190,6 +191,18 @@
 				$list = nextCondition($node, $list);
 		}
 	}
+	
+	function iterativeDeepeningSearch()
+	{
+		$limite = 0;
+		
+		do
+		{
+			
+		}while(is_null($r));
+	}
+	
 	print '<pre>';
 	print_r(nextCondition($root, $list));
 	exit;
+?>
