@@ -192,14 +192,17 @@
 		}
 	}
 	
-	function iterativeDeepeningSearch()
+	function iterativeDeepeningSearch($root, $list, $objective)
 	{
 		$limite = 0;
 		
 		do
 		{
-			
+		   $r = depthLimitSearch($root, $list, $objective, $limite);
+		   $limite++;
 		}while(is_null($r));
+		
+		return $r;
 	}
 	
 	print '<pre>';
