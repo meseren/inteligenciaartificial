@@ -1,4 +1,7 @@
 <?php 
+
+	require_once 'Node.class.php';
+
 	error_reporting(0);
 
 	$list = array();
@@ -12,8 +15,8 @@
 		
 		if(substr($coordinates,1,1) != '1')
 		{
-			$root[$element] = $root[$element + 3];
-			$root[$element + 3] = '';
+			$root->matriz[$element] = $root->matriz[$element + 3];
+			$root->matriz[$element + 3] = '';
 
 			return $root;
 		}
@@ -25,8 +28,8 @@
 	{
 		if(substr($coordinates,1,1) != '3')
 		{
-			$root[$element] = $root[$element - 3];
-			$root[$element - 3] = '';
+			$root->matriz[$element] = $root->matriz[$element - 3];
+			$root->matriz[$element - 3] = '';
 
 			return $root;
 		}
@@ -38,8 +41,8 @@
 	{
 		if(substr($coordinates,3,-1) != '1')
 		{
-			$root[$element] = $root[$element - 1];
-			$root[$element - 1] = '';
+			$root->matriz[$element] = $root->matriz[$element - 1];
+			$root->matriz[$element - 1] = '';
 
 			return $root;
 		}
@@ -51,8 +54,8 @@
 	{
 		if(substr($coordinates,3,-1) != '3')
 		{
-			$root[$element] = $root[$element + 1];
-			$root[$element + 1] = '';
+			$root->matriz[$element] = $root->matriz[$element + 1];
+			$root->matriz[$element + 1] = '';
 
 			return $root;
 		}
@@ -62,12 +65,12 @@
 
 	function returnPositionFree($root)
 	{
-		foreach ($root as $key => $value)
+		foreach ($root->matriz as $key => $value)
 			if(empty($value))
 				return $key;
 	}
 
-	function returnCoordinates($index, $root)
+	function returnCoordinates($index)
 	{
 		if($index < 3)
 			if($index < 2)
@@ -99,36 +102,36 @@
 	function nextCondition($root, $list)
 	{
 		#Descobrindo qual linha a posição livre está
-		$element = returnPositionFree($root);
+		$index = returnPositionFree($root);
 
-		$position = returnCoordinates($element, $root);
+		$position = returnCoordinates($index);
 
-		$down = down($root, $element, $position);
-		$up = up($root, $element, $position);
-		$left = left($root, $element, $position);
-		$right = right($root, $element, $position);
+		$down = down($root->matriz, $index, $position);
+		$up = up($root->matriz, $index, $position);
+		$left = left($root->matriz, $index, $position);
+		$right = right($root->matriz, $index, $position);
 
 		if($down !== false){
-			$down['pai'] = $root;
-			$down['movimento'] = 'down';
+			$down->pai = $root;
+			$down->movimento = 'down';
 			array_push($list, $down);
 		}
 
 		if($up !== false){
-			$up['pai'] = $root;
-			$up['movimento'] = 'up';
+			$up->pai = $root;
+			$up->movimento = 'up';
 			array_push($list, $up);
 		}
 
 		if($right !== false){
-			$right['pai'] = $root;
-			$right['movimento'] = 'right';
+			$right->pai = $root;
+			$right->movimento = 'right';
 			array_push($list, $right);
 		}
 
 		if($left !== false){
-			$left['pai'] = $root;
-			$left['movimento'] = 'left';
+			$left->pai = $root;
+			$left->movimento = 'left';
 			array_push($list, $left);
 		}
 
@@ -137,8 +140,8 @@
 
 	function objectiveTest($root, $objective)
 	{
-		foreach ($root as $i => $value)
-			if($root[$i] != $objective[$i])
+		foreach ($root->matriz as $i => $value)
+			if($value != $objective[$i])
 				return false;
 			
 		return true;
@@ -147,6 +150,7 @@
 	function widthSearch($root, $list, $objective)
 	{
 		array_push($list, $root);
+		
 		while (count($list) > 0) {
 			$node = $list[0];
 			
@@ -205,7 +209,11 @@
 		return $r;
 	}
 	
+	
+	$root = new Node(0, '', '', 0, [1, 2, 3, '', 4, 5, 6, 7, 8]);
+
 	print '<pre>';
+
 	print_r(nextCondition($root, $list));
 	exit;
 ?>
