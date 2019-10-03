@@ -150,7 +150,7 @@
 	function widthSearch($root, $list, $objective)
 	{
 		array_push($list, $root);
-		
+
 		while (count($list) > 0) {
 			$node = $list[0];
 			
@@ -207,6 +207,37 @@
 		}while(is_null($r));
 		
 		return $r;
+	}
+
+	function orderCost($list)
+	{
+		for ($i=0; $i < count($list); $i++) 
+			for ($j=1; $j < count($list); $j++)  
+				if($list[$i]->custo > $list[$j]->custo)
+				{
+					$aux = $list[$i];
+					$list[$i] = $list[$j];
+					$list[$j] = $aux;
+				}
+			}
+		}
+
+		return $list;
+	}
+
+	function custoUniforme()
+	{
+		array_push($list, $root);
+
+		while (count($list) > 0) {
+			$newList = orderCost($list);
+			array_shift($list); 
+
+			if(objectiveTest($newList[0]->matriz, $objective))
+				return $newList[0]->matriz;
+			else	
+				$list = nextCondition($newList[0]->matriz, $list);
+		}		
 	}
 	
 	
