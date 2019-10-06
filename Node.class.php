@@ -2,20 +2,20 @@
 
 class Node
 {
-	public $cost;
-	public $parent;
-	public $moviment;
-	public $depth;
-	public $grid;
+	public $custo;
+	public $pai;
+	public $movimento;
+	public $profundidade;
+	public $matriz;
 
 
-	public function __construct($cost = '', $parent = '', $moviment = '', $depth = '', $grid = '')
+	public function __construct($custo = '', $pai = '', $movimento = '', $profundidade = '', $matriz = '')
 	{
-		$this->cost = $cost;
-		$this->parent = $parent;
-		$this->moviment = $moviment;
-		$this->depth = $depth;
-		$this->grid = $grid;
+		$this->custo = $custo;
+		$this->pai = $pai;
+		$this->movimento = $movimento;
+		$this->profundidade = $profundidade;
+		$this->matriz = $matriz;
 	}
 
 }

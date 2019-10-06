@@ -65,7 +65,7 @@
 
 	function returnPositionFree($root)
 	{
-		foreach ($root->grid as $key => $value)
+		foreach ($root->matriz as $key => $value)
 			if(empty($value))
 				return $key;
 	}
@@ -108,50 +108,50 @@
 
 		$position = returnCoordinates($index);
 
-		$left = left($root->grid, $index, $position);
-		$down = down($root->grid, $index, $position);
-		$up = up($root->grid, $index, $position);
-		$right = right($root->grid, $index, $position);
+		$left = left($root->matriz, $index, $position);
+		$down = down($root->matriz, $index, $position);
+		$up = up($root->matriz, $index, $position);
+		$right = right($root->matriz, $index, $position);
 
 		if($down !== false){
 			$node = new Node();
-			$node->grid = $down;
-			$node->parent = $root;
-			$node->moviment = 'down';
-			$node->depth = $root->depth + 1;
-			$node->cost = $root->cost + 1;
+			$node->matriz = $down;
+			$node->pai = $root;
+			$node->movimento = 'down';
+			$node->profundidade = $root->profundidade + 1;
+			$node->custo = $root->custo + 1;
 			
 			array_push($list, $node);
 		}
 
 		if($up !== false){
 			$node = new Node();
-			$node->grid = $up;
-			$node->parent = $root;
-			$node->moviment = 'up';
-			$node->depth = $root->depth + 1;
-			$node->cost = $root->cost + 1;
+			$node->matriz = $up;
+			$node->pai = $root;
+			$node->movimento = 'up';
+			$node->profundidade = $root->profundidade + 1;
+			$node->custo = $root->custo + 1;
 			array_push($list, $node);
 		}
 
 		if($right !== false){
 			$node = new Node();
-			$node->grid = $right;
-			$node->parent = $root;
-			$node->moviment = 'right';
-			$node->depth = $root->depth + 1;
-			$node->cost = $root->cost + 1;
+			$node->matriz = $right;
+			$node->pai = $root;
+			$node->movimento = 'right';
+			$node->profundidade = $root->profundidade + 1;
+			$node->custo = $root->custo + 1;
 			
 			array_push($list, $node);
 		}
 
 		if($left !== false){
 			$node = new Node();
-			$node->grid = $left;
-			$node->parent = $root;
-			$node->moviment = 'left';
-			$node->depth = $root->depth + 1;
-			$node->cost = $root->cost + 1;
+			$node->matriz = $left;
+			$node->pai = $root;
+			$node->movimento = 'left';
+			$node->profundidade = $root->profundidade + 1;
+			$node->custo = $root->custo + 1;
 			
 			array_push($list, $node);
 		}
@@ -178,7 +178,7 @@
 			$node = $list[0];
 			array_shift($list); 
 
-			if(objectiveTest($node->grid, $objective))
+			if(objectiveTest($node->matriz, $objective))
 				return $node;
 			else
 				$list =  nextCondition($node);
@@ -197,7 +197,7 @@
 			
 			array_pop($list); 
 
-			if(objectiveTest($node->grid, $objective))
+			if(objectiveTest($node->matriz, $objective))
 				return $node;
 			else	
 				$list = nextCondition($node);
@@ -216,11 +216,11 @@
 
 			array_pop($list); 
 
-			if(objectiveTest($node->grid, $objective)){
+			if(objectiveTest($node->matriz, $objective)){
 				return $node;
 			}
 			else
-				if($node->depth < $limite)
+				if($node->profundidade < $limite)
 					$list =  nextCondition($node);
 
 			//print_r($list);
@@ -248,7 +248,7 @@
 	{
 		for ($i=0; $i < count($list); $i++){
 			for ($j=1; $j < count($list); $j++){
-				if($list[$i]->cost > $list[$j]->cost)
+				if($list[$i]->custo > $list[$j]->custo)
 				{
 					$aux = $list[$i];
 					$list[$i] = $list[$j];
@@ -260,7 +260,7 @@
 		return $list;
 	}
 
-	function costUniform($root, $objective)
+	function custoUniforme($root, $objective)
 	{
 		$list = array();
 
@@ -276,7 +276,7 @@
 				return $list;
 			else	
 				$list = nextCondition($node);
-
+			
 			print_r($list);
 		}
 	}
@@ -285,5 +285,5 @@
 	$root = new Node(0, '', '', 0, [1, 2, 3, 4, 5, 6, 7, '', 8]);
 
 	print '<pre>';
-	print_r(costUniforme($root, $objective));
+	print_r(custoUniforme($root, $objective));
 	
