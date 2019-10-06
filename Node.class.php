@@ -9,7 +9,7 @@ class Node
 	public $matriz;
 
 
-	public function __construct($custo, $pai, $movimento, $profundidade, $matriz)
+	public function __construct($custo = '', $pai = '', $movimento = '', $profundidade = '', $matriz = '')
 	{
 		$this->custo = $custo;
 		$this->pai = $pai;

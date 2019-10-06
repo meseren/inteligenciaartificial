@@ -6,17 +6,17 @@
 
 	$list = array();
 
-	$root = [1, 2, 3, '', 4, 5, 6, 7, 8];
+	$root = [1, 2, 3, 4, 5, 6, 7, '', 8];
 
 	$objective = [1, 2, 3, 4, 5, 6, 7, 8, ''];
 
 	function up($root, $element, $coordinates)
 	{
-		
-		if(substr($coordinates,1,1) != '1')
+		if(substr($coordinates,1,1) != '3')
 		{
-			$root->matriz[$element] = $root->matriz[$element + 3];
-			$root->matriz[$element + 3] = '';
+			print $element;
+			$root[$element] = $root[$element + 3];
+			$root[$element + 3] = '';
 
 			return $root;
 		}
@@ -26,10 +26,10 @@
 
 	function down($root, $element, $coordinates)
 	{
-		if(substr($coordinates,1,1) != '3')
+		if(substr($coordinates,1,1) != '1')
 		{
-			$root->matriz[$element] = $root->matriz[$element - 3];
-			$root->matriz[$element - 3] = '';
+			$root[$element] = $root[$element - 3];
+			$root[$element - 3] = '';
 
 			return $root;
 		}
@@ -39,10 +39,10 @@
 
 	function left($root, $element, $coordinates)
 	{
-		if(substr($coordinates,3,-1) != '1')
+		if(substr($coordinates,3,-1) != '3')
 		{
-			$root->matriz[$element] = $root->matriz[$element - 1];
-			$root->matriz[$element - 1] = '';
+			$root[$element] = $root[$element + 1];
+			$root[$element + 1] = '';
 
 			return $root;
 		}
@@ -52,10 +52,10 @@
 
 	function right($root, $element, $coordinates)
 	{
-		if(substr($coordinates,3,-1) != '3')
+		if(substr($coordinates,3,-1) != '1')
 		{
-			$root->matriz[$element] = $root->matriz[$element + 1];
-			$root->matriz[$element + 1] = '';
+			$root[$element] = $root[$element - 1];
+			$root[$element - 1] = '';
 
 			return $root;
 		}
@@ -99,40 +99,61 @@
 					return '[3,3]';
 	}
 
-	function nextCondition($root, $list)
+	function nextCondition($root)
 	{
+		$list = array();
+
 		#Descobrindo qual linha a posição livre está
 		$index = returnPositionFree($root);
 
 		$position = returnCoordinates($index);
 
+		$left = left($root->matriz, $index, $position);
 		$down = down($root->matriz, $index, $position);
 		$up = up($root->matriz, $index, $position);
-		$left = left($root->matriz, $index, $position);
 		$right = right($root->matriz, $index, $position);
 
 		if($down !== false){
-			$down->pai = $root;
-			$down->movimento = 'down';
-			array_push($list, $down);
+			$node = new Node();
+			$node->matriz = $down;
+			$node->pai = $root;
+			$node->movimento = 'down';
+			$node->profundidade = $root->profundidade + 1;
+			$node->custo = $root->custo + 1;
+			
+			array_push($list, $node);
 		}
 
 		if($up !== false){
-			$up->pai = $root;
-			$up->movimento = 'up';
-			array_push($list, $up);
+			$node = new Node();
+			$node->matriz = $up;
+			$node->pai = $root;
+			$node->movimento = 'up';
+			$node->profundidade = $root->profundidade + 1;
+			$node->custo = $root->custo + 1;
+			array_push($list, $node);
 		}
 
 		if($right !== false){
-			$right->pai = $root;
-			$right->movimento = 'right';
-			array_push($list, $right);
+			$node = new Node();
+			$node->matriz = $right;
+			$node->pai = $root;
+			$node->movimento = 'right';
+			$node->profundidade = $root->profundidade + 1;
+			$node->custo = $root->custo + 1;
+			
+			array_push($list, $node);
 		}
 
 		if($left !== false){
-			$left->pai = $root;
-			$left->movimento = 'left';
-			array_push($list, $left);
+			$node = new Node();
+			$node->matriz = $left;
+			$node->pai = $root;
+			$node->movimento = 'left';
+			$node->profundidade = $root->profundidade + 1;
+			$node->custo = $root->custo + 1;
+			
+			array_push($list, $node);
 		}
 
 		return $list;
@@ -140,79 +161,93 @@
 
 	function objectiveTest($root, $objective)
 	{
-		foreach ($root->matriz as $i => $value)
+		foreach ($root as $i => $value)
 			if($value != $objective[$i])
 				return false;
 			
 		return true;
 	}
 
-	function widthSearch($root, $list, $objective)
+	function widthSearch($root, $objective)
 	{
+		$list = array();
 		array_push($list, $root);
 
 		while (count($list) > 0) {
+
 			$node = $list[0];
-			
 			array_shift($list); 
 
-			if(objectiveTest($node, $objective))
+			if(objectiveTest($node->matriz, $objective))
 				return $node;
-			else	
-				$list = nextCondition($node, $list);
+			else
+				$list =  nextCondition($node);
+
+			//print_r($list);
 		}		
 	}
 	
-	function depthSearch($root, $list, $objective)
+	function depthSearch($root, $objective)
 	{
-		
+		$list = array();
 		array_push($list, $root);
-		
+
 		while (count($list) > 0) {
-			$node = $list[0];
+			$node = $list[count($list)-1];
 			
 			array_pop($list); 
 
-			if(objectiveTest($node, $objective))
+			if(objectiveTest($node->matriz, $objective))
 				return $node;
 			else	
-				$list = nextCondition($node, $list);
+				$list = nextCondition($node);
+
+			//print_r($list);
 		}	
 	}
 	
-	function depthLimitSearch($root, $list, $objective, $limit)
+	function depthLimitSearch($root, $objective, $limite)
 	{
+		$list = array();
 		array_push($list, $root);
-		
+
 		while (count($list) > 0) {
-			$node = $list[0];
-			
+			$node = $list[count($list)-1];
+
 			array_pop($list); 
 
-			if(objectiveTest($node, $objective))
+			if(objectiveTest($node->matriz, $objective)){
 				return $node;
-			else	
-				$list = nextCondition($node, $list);
+			}
+			else
+				if($node->profundidade < $limite)
+					$list =  nextCondition($node);
+
+			//print_r($list);
 		}
+
+		return null;	
 	}
 	
-	function iterativeDeepeningSearch($root, $list, $objective)
+	function iterativeDeepeningSearch($root, $objective)
 	{
 		$limite = 0;
 		
 		do
 		{
-		   $r = depthLimitSearch($root, $list, $objective, $limite);
-		   $limite++;
+		   ++$limite;
+		   $r = depthLimitSearch($root, $objective, $limite);
 		}while(is_null($r));
 		
+		print 'Limite >>> '.$limite.'<br><br>';
+
 		return $r;
 	}
 
 	function orderCost($list)
 	{
-		for ($i=0; $i < count($list); $i++) 
-			for ($j=1; $j < count($list); $j++)  
+		for ($i=0; $i < count($list); $i++){
+			for ($j=1; $j < count($list); $j++){
 				if($list[$i]->custo > $list[$j]->custo)
 				{
 					$aux = $list[$i];
@@ -225,26 +260,30 @@
 		return $list;
 	}
 
-	function custoUniforme()
+	function custoUniforme($root, $objective)
 	{
+		$list = array();
+
 		array_push($list, $root);
 
 		while (count($list) > 0) {
-			$newList = orderCost($list);
+			$list = orderCost($list);
+			$node = $list[0];
+
 			array_shift($list); 
 
-			if(objectiveTest($newList[0]->matriz, $objective))
-				return $newList[0]->matriz;
+			if(objectiveTest($node, $objective))
+				return $list;
 			else	
-				$list = nextCondition($newList[0]->matriz, $list);
-		}		
+				$list = nextCondition($node);
+			
+			print_r($list);
+		}
 	}
 	
 	
-	$root = new Node(0, '', '', 0, [1, 2, 3, '', 4, 5, 6, 7, 8]);
+	$root = new Node(0, '', '', 0, [1, 2, 3, 4, 5, 6, 7, '', 8]);
 
 	print '<pre>';
-
-	print_r(nextCondition($root, $list));
-	exit;
-?>
+	print_r(custoUniforme($root, $objective));
+	
