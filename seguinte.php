@@ -6,34 +6,9 @@
 
 	$objetivo = [1, 2, 3, 4, 5, 6, 7, 8, ''];
 
-	function calculaForaLugar($estado, $objetivo)
-	{
-		$cont = 0;
-
-		foreach ($estado->matriz as $key => $value)
-			if($objetivo[$key] != $value)
-				$cont++;
-		
-		return $cont;
-	}
-
-	function verificaAdjacencia($no, $vazio, $lista)
-	{
-		if(($no-3) == $vazio)
-			return true;
-		else 
-			if(($no+3) == $vazio)
-				return true;
-			else 
-				if(($no-1) == $vazio)
-					return true;
-				else 
-					if(($no+1) == $vazio)
-						return true;
-
-		return false;
-	}
-
+	/*--------------------------------------*
+	| Movimentos possíveis no quebra-cabeça |
+	*---------------------------------------*/
 	function cima($no, $vazio, $coordenadas)
 	{
 		if(substr($coordenadas,1,1) != '3')
@@ -44,7 +19,6 @@
 
 			return $no;
 		}
-
 		return false;
 	}
 
@@ -57,7 +31,6 @@
 
 			return $no;
 		}
-
 		return false;
 	}
 
@@ -70,7 +43,6 @@
 
 			return $no;
 		}
-
 		return false;
 	}
 
@@ -83,10 +55,19 @@
 
 			return $no;
 		}
-
 		return false;
 	}
+	/*---------------*
+	| Fim movimentos |
+	*----------------*/
 
+	/*--------------------------------------------*
+     | Identifica o index do ponto vazio no array |
+     |											  |
+     | @param array $no                           |
+     |                                            |
+     | @return int                                |
+	 * -------------------------------------------*/
 	function retornaIndexVazio($no)
 	{
 		foreach ($no->matriz as $key => $value)
@@ -94,6 +75,13 @@
 				return $key;
 	}
 
+	/*------------------------------------------------------------------------------------------*
+     | Identifica em que posição da "matriz" está o ponto vazio, de acordo com o index do array |
+     |																							|
+     | @param int $index Posição do vetor que está vázia										|
+     |																							|
+     | @return string																			|
+	 *------------------------------------------------------------------------------------------*/
 	function retornaCoordenadasVazio($index)
 	{
 		if($index < 3)
@@ -123,16 +111,21 @@
 					return '[3,3]';
 	}
 
+	/*--------------------------------------------------------*
+     | Gera todos os nós sucessores a partir de um nó enviado |
+     |														  |
+     | @param object $raiz Nó que será expandido.			  |
+     |														  |
+     | @return array										  |
+	*---------------------------------------------------------*/
 	function retornaSucessor($raiz)
 	{
 		$lista = array();
 
-		#Descobrindo qual linha a posição livre está
 		$index = retornaIndexVazio($raiz);
 
 		$coordenadaVazia = retornaCoordenadasVazio($index);
 
-		#Faz todos os movimentos
 		$baixo = baixo($raiz->matriz, $index, $coordenadaVazia);
 		$esquerda = esquerda($raiz->matriz, $index, $coordenadaVazia);
 		$cima = cima($raiz->matriz, $index, $coordenadaVazia);
@@ -184,6 +177,13 @@
 		return $lista;
 	}
 
+	/*------------------------------------------*
+     | Verifica se o nó é o meu Objetivo Final  |
+     |							  			    |
+     | @param object $raiz Nó que será validado.|
+     | @param array $objetivo Objetico Final.   |
+     | @return boolean						    |
+	*-------------------------------------------*/
 	function testeOjetivo($no, $objetivo)
 	{
 		foreach ($no as $i => $value)
@@ -193,6 +193,9 @@
 		return true;
 	}
 
+	/*------------------*
+     | Início da Buscas |
+	*-------------------*/
 	function buscaLargura($raiz, $objetivo)
 	{
 		$lista = array();
@@ -307,24 +310,19 @@
 			else	
 				$list = retornaSucessor($node);
 			
-			print_r($list);
+			//print_r($list);
 		}
 	}
+	/*---------------*
+     | Fim da Buscas |
+	*----------------*/
 	
 	
-	$raiz = new Node(0, '', '', 0, [1, 2, 3, 4, 5, 6, 7, 8, '']);
+	/*------------------*
+     | Setup para teste |
+ 	 *------------------*/
+	$raiz = new Node(0, '', '', 0, [1, 2, 3, 4, 5, 6, 7, '', 8]);
 
-	$vazio = retornaIndexVazio($raiz);
-
-	if(verificaAdjacencia(8, $vazio))
-		print 'eh adjacente';
-	else 
-		print 'nao eh adjacente';
-	
-	exit;
-
-	print $vazio;
-	exit;
 	print '<pre>';
-	print(calculaForaLugar($raiz, $objetivo));
+	print(buscaLargura($raiz, $objetivo));
 	
