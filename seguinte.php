@@ -1,4 +1,14 @@
 <?php 
+	/**
+	* Autores
+	* Melissa
+	* Allan
+	* Leonardo Clemente
+	*/
+
+	/**
+	* Link GitHub: https://github.com/meseren/inteligenciaartificial/edit/master/seguinte.php
+	*/
 
 	error_reporting(0);
 	
