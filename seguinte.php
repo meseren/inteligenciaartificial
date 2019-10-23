@@ -23,7 +23,6 @@
 	{
 		if(substr($coordenadas,1,1) != '3')
 		{
-			print $vazio;
 			$no[$vazio] = $no[$vazio + 3];
 			$no[$vazio + 3] = '';
 
@@ -128,16 +127,14 @@
      |														  |
      | @return array										  |
 	*---------------------------------------------------------*/
-	function retornaSucessor($raiz)
+	function retornaSucessor($raiz, $lista)
 	{
-		$lista = array();
-
 		$index = retornaIndexVazio($raiz);
 
 		$coordenadaVazia = retornaCoordenadasVazio($index);
 
-		$baixo = baixo($raiz->matriz, $index, $coordenadaVazia);
 		$esquerda = esquerda($raiz->matriz, $index, $coordenadaVazia);
+		$baixo = baixo($raiz->matriz, $index, $coordenadaVazia);
 		$cima = cima($raiz->matriz, $index, $coordenadaVazia);
 		$direita = direita($raiz->matriz, $index, $coordenadaVazia);
 
@@ -221,9 +218,9 @@
 			if(testeOjetivo($node->matriz, $objetivo))
 				return $node;
 			else
-				$lista =  retornaSucessor($node);
+				$lista =  retornaSucessor($node, $lista);
 
-			print_r($lista);
+			//print_r($lista);
 		}		
 	}
 	
@@ -241,9 +238,9 @@
 			if(testeOjetivo($node->matriz, $objetivo))
 				return $node;
 			else	
-				$lista = retornaSucessor($node);
+				$lista = retornaSucessor($node, $lista);
 
-			//print_r($lista);
+			print_r($lista);
 		}	
 	}
 	
@@ -263,9 +260,9 @@
 			}
 			else
 				if($node->profundidade < $limite)
-					$lista =  retornaSucessor($node);
+					$lista =  retornaSucessor($node, $lista);
 
-			//print_r($lista);
+			print_r($lista);
 		}
 
 		return null;	
@@ -304,23 +301,24 @@
 
 	function custoUniforme($raiz, $objetivo)
 	{
-		$list = array();
+		$lista = array();
 
-		array_push($list, $raiz);
+		array_push($lista, $raiz);
 
-		while (count($list) > 0) {
-			$list = ordenarCusto($list);
-			$node = $list[0];
+		while (count($lista) > 0) {
+			$lista = ordenarCusto($lista);
+			$node = $lista[0];
 
 			#Remove o primeiro da lista
-			array_shift($list); 
+			array_shift($lista); 
 
 			if(testeOjetivo($node, $objetivo))
-				return $list;
+				return $lista;
 			else	
-				$list = retornaSucessor($node);
+				$lista = retornaSucessor($node, $lista);
 			
-			//print_r($list);
+			print_r($lista);
+
 		}
 	}
 	/*---------------*
@@ -331,8 +329,11 @@
 	/*------------------*
      | Setup para teste |
  	 *------------------*/
-	$raiz = new Node(0, '', '', 0, [1, 2, 3, 4, 5, 6, 7, '', 8]);
+	$raiz = new Node(0, '', '', 0, [1, 2, '', 4, 6, 3, 7, 5, 8]);
 
 	print '<pre>';
-	print(buscaLargura($raiz, $objetivo));
-	
+	print_r(buscaAprofundamentoIterativo($raiz, $objetivo));
+	#print_r(buscaProfundidade($raiz, $objetivo));
+	#print_r(buscaLargura($raiz, $objetivo));
+	#print_r(buscaProfundidadeLimite($raiz, $objetivo, 2));
+	#print_r(custoUniforme($raiz, $objetivo));
