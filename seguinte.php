@@ -469,7 +469,7 @@
 		   $r = buscaProfundidadeLimite($raiz, $objetivo, $limite);
 		}while(is_null($r));
 		
-		//print 'Limite >>> '.$limite.'<br><br>';
+		print 'Limite >>> '.$limite.'<br><br>';
 		$GLOBALS['profundidadeEncontrada'] = $limite;
 
 		return $r;
@@ -670,12 +670,13 @@
 			}
 			else	
 				$lista = retornaSucessor($node, $lista);
+
+			//print_r($lista);
 		}
 	}
 	/*---------------*
      | Fim das Buscas |
 	*----------------*/
-	
 	
 	/*------------------*
      | Setup para teste |
@@ -741,25 +742,17 @@
     $d20['3'] = array(6, 3, '', 2, 5, 8, 4, 1, 7);
     $d20['4'] = array(4, 8, 1, 7, 3, 6, 2, 5, '');
 
-    //print '<pre> <h3>Nó Final: </h3>';
 
     $raiz = new Node(0, '', '', 0, $d2[1]);
     $raiz->h1 =  $raiz->f1 = h1($raiz, $GLOBALS['objetivo']);
     $raiz->h2 = $raiz->f2 = h2($raiz, $GLOBALS['objetivo']);
 
+    print '<pre> <h3>Nó Final: </h3>';
+
 	/*---*
      | OA|
  	 *---*/
- 	 /*
-	buscaAprofundamentoIterativo($raiz, $GLOBALS['objetivo']);
-
-	print 'Total Nós IDS:';
-	print $GLOBALS['totalNos']."\n";
-	print 'Profundidade: ';
-	print $GLOBALS['profundidadeEncontrada']."\n";
-	print 'b*:';
-	print bEstrela($GLOBALS['totalNos'], $GLOBALS['profundidadeEncontrada'])."\n";
-	exit;
+	#print_r(buscaAprofundamentoIterativo($raiz, $GLOBALS['objetivo']));
 	#print_r(buscaProfundidade($raiz, $GLOBALS['objetivo']));
 	#print_r(buscaLargura($raiz, $GLOBALS['objetivo']));
 	#print_r(buscaProfundidadeLimite($raiz, $GLOBALS['objetivo'], 2));
@@ -770,122 +763,23 @@
  	 *---*/
 	#print_r(buscaGulosah1($raiz, $GLOBALS['objetivo']));
 	#print_r(buscaGulosah2($raiz, $GLOBALS['objetivo']));
-
-    $media_nos = 0;
-    $bEstrela = 0;
-    /*
-    for ($i=1; $i <= count($d2) ; $i++) { 
-    	$raiz = new Node(0, '', '', 0, $d2[$i]);
+	#print_r(buscaAEstrelah1($raiz, $GLOBALS['objetivo']));
+	#print_r(buscaAEstrelah2($raiz, $GLOBALS['objetivo']));
+  
+	for ($i=1; $i <= count($d10) ; $i++) { 
+    	$raiz = new Node(0, '', '', 0, $d10[$i]);
     	$raiz->h1 =  $raiz->f1 = h1($raiz, $GLOBALS['objetivo']);
     	$raiz->h2 = $raiz->f2 = h2($raiz, $GLOBALS['objetivo']);
-
-		buscaAEstrelah2($raiz, $GLOBALS['objetivo']);
-		print '<pre> <b>Total Nós A* h2: </b>';
-		print $GLOBALS['totalNos'].'<br>';
-		
-		print '<pre> <b>Profundidade A* h2: </b>';
-		print $GLOBALS['profundidadeEncontrada'];
-
-		print '<pre> <b>b*: </b>';
-    	$bEstrela += bEstrela($GLOBALS['totalNos'], $GLOBALS['profundidadeEncontrada']);
-
-    	$media_nos += $GLOBALS['totalNos'];
-
-		$GLOBALS['profundidadeEncontrada'] = 0;
-		$GLOBALS['totalNos'] = 0;
-	}	$bEstrela /= 4;
-
-	$media_nos /= 4;
-	print '<br><br><b>Média B* :</b>'.$bEstrela;
-	$bEstrela = 0;
-	print '<br><br><b>Média</b>: '.$media_nos;
-	$media_nos = 0;
-
-	print '<br><br>---------------------------------<br><br>';
-	
-	for ($i=1; $i <= count($d2) ; $i++) { 
-    	$raiz = new Node(0, '', '', 0, $d2[$i]);
-    	$raiz->h1 =  $raiz->f1 = h1($raiz, $GLOBALS['objetivo']);
-    	$raiz->h2 = $raiz->f2 = h2($raiz, $GLOBALS['objetivo']);
-
-
-		buscaGulosah1($raiz, $GLOBALS['objetivo']);
-		print '<pre> <b>Total Nós GME h1: </b>';
-		print $GLOBALS['totalNos'].'<br>';
-		
-		print '<pre> <b>Profundidade GME h1: </b>';
-		print $GLOBALS['profundidadeEncontrada'];
-
-		print '<pre> <b>b*: </b>';
-    	$bEstrela += bEstrela($GLOBALS['totalNos'], $GLOBALS['profundidadeEncontrada']);
-	
-		$media_nos += $GLOBALS['totalNos'];
-		$GLOBALS['profundidadeEncontrada'] = 0;
-		$GLOBALS['totalNos'] = 0;
-	}
-	$bEstrela /= 4;
-	$media_nos /= 4;
-	print '<br><br><b>Média</b>: '.$media_nos;
-	print '<br><br><b>Média B* :</b>'.$bEstrela;
-	$bEstrela = 0;
-	$media_nos = 0;
-
-	print '<br><br>---------------------------------<br><br>';
-	
-	for ($i=1; $i <= count($d2) ; $i++) { 
-    	$raiz = new Node(0, '', '', 0, $d2[$i]);
-    	$raiz->h1 =  $raiz->f1 = h1($raiz, $GLOBALS['objetivo']);
-    	$raiz->h2 = $raiz->f2 = h2($raiz, $GLOBALS['objetivo']);
-
 
 		buscaGulosah2($raiz, $GLOBALS['objetivo']);
-		print '<pre> <b>Total Nós GME h2: </b>';
-		print $GLOBALS['totalNos'].'<br>';
-		
-		print '<pre> <b>Profundidade GME h2: </b>';
-		print $GLOBALS['profundidadeEncontrada'];
 
-		print '<pre> <b>b*: </b>';
-    	$bEstrela += bEstrela($GLOBALS['totalNos'], $GLOBALS['profundidadeEncontrada']);
-	
-		$media_nos += $GLOBALS['totalNos'];
-		$GLOBALS['profundidadeEncontrada'] = 0;
-		$GLOBALS['totalNos'] = 0;
-	}
-	$bEstrela /= 4;
-	$media_nos /= 4;
-	print '<br><br><b>Média</b>: '.$media_nos;
-	print '<br><br><b>Média B* :</b>'.$bEstrela;
-	$bEstrela = 0;
-	$media_nos = 0;
+		print 'Total Nós IDS:'.$GLOBALS['totalNos']."\n";
+		print 'Profundidade: '.$GLOBALS['profundidadeEncontrada']."\n";
+		print 'b*:'.bEstrela($GLOBALS['totalNos'], $GLOBALS['profundidadeEncontrada'])."\n";  
 
-	print '<br><br>---------------------------------<br><br>';
-*/
-	for ($i=1; $i <= count($d8) ; $i++) { 
-    	$raiz = new Node(0, '', '', 0, $d8[$i]);
-    	$raiz->h1 =  $raiz->f1 = h1($raiz, $GLOBALS['objetivo']);
-    	$raiz->h2 = $raiz->f2 = h2($raiz, $GLOBALS['objetivo']);
-
-		buscaGulosah1($raiz, $GLOBALS['objetivo']);
-
-		print 'Total Nós IDS:';
-		print $GLOBALS['totalNos']."\n";
-		print 'Profundidade: ';
-		print $GLOBALS['profundidadeEncontrada']."\n";
-		print 'b*:';
-		print bEstrela($GLOBALS['totalNos'], $GLOBALS['profundidadeEncontrada'])."\n";  
-
-		$bEstrela += bEstrela($GLOBALS['totalNos'], $GLOBALS['profundidadeEncontrada']);
-		$media_nos += $GLOBALS['totalNos'];
 		$GLOBALS['profundidadeEncontrada'] = 0;
 		$GLOBALS['totalNos'] = 0;
     }
 
-	$bEstrela /= 4;
-    $media_nos /= 4;
-    print 'Média: '.$media_nos."\n";
-    print 'Média B*:'.$bEstrela."\n";
-    //$bEstrela = 0;
-    $media_nos = 0;
 
 	
